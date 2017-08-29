@@ -46,18 +46,27 @@ SequenceCode.start = strfind(xmlData,'<sequence><code code="')+length('<sequence
 SequenceCode.end = SequenceCode.start + 15;
 % nomenclature=readtable('Table A-7-1-1.csv'); -- Values of MDC ISO11073
 
-SequenceCode.value=ones(1,length(SequenceCode.start));
+SequenceCode.value=[];
 SequenceCode.text=SequenceCode.value;
 for i=1:length(SequenceCode.start)
     string = strfind(xmlData(SequenceCode.start(i):SequenceCode.end(i)),'"');
     if isempty(string)
-        SequenceCode.text = [SequenceCode.value, char(xmlData(SequenceCode.start(i):SequenceCode.end(i)))];
-        SequenceCode.value = [SequenceCode.value, length(char(xmlData(SequenceCode.start(i):SequenceCode.end(i))))];
+        SequenceCode.text = [SequenceCode.text, char(xmlData(SequenceCode.start(i):SequenceCode.end(i)))];
+        if i==1
+            SequenceCode.value = [SequenceCode.value, length(char(xmlData(SequenceCode.start(i):SequenceCode.end(i))))];
+        else
+            SequenceCode.value = [SequenceCode.value, SequenceCode.value(i-1)+length(char(xmlData(SequenceCode.start(i):SequenceCode.end(i))))];
+        end
     else
-        SequenceCode.text = [SequenceCode.value, char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2))];
-        SequenceCode.value = [SequenceCode.value, length(char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2)))];
+        SequenceCode.text = [SequenceCode.text, char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2))];
+        if i==1
+            SequenceCode.value = [SequenceCode.value, length(char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2)))];
+        else
+            SequenceCode.value = [SequenceCode.value, SequenceCode.value(i-1)+length(char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2)))];
+        end
     end
- end
+end
+
 
 %% Setting the data channels taggs
 % digitsIni = strfind(xmlData,'<digits>');
