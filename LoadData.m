@@ -1,4 +1,4 @@
-%clear all
+clear all
 clc
 
 %% Variables and File Load
@@ -46,26 +46,29 @@ SequenceCode.start = strfind(xmlData,'<sequence><code code="')+length('<sequence
 SequenceCode.end = SequenceCode.start + 15;
 % nomenclature=readtable('Table A-7-1-1.csv'); -- Values of MDC ISO11073
 
-SequenceCode.value=[];
-SequenceCode.text=SequenceCode.value;
+SequenceCode.textValue=[];
+SequenceCode.textChain=[];
 for i=1:length(SequenceCode.start)
     string = strfind(xmlData(SequenceCode.start(i):SequenceCode.end(i)),'"');
     if isempty(string)
-        SequenceCode.text = [SequenceCode.text, char(xmlData(SequenceCode.start(i):SequenceCode.end(i)))];
+        SequenceCode.textChain = [SequenceCode.textChain, char(xmlData(SequenceCode.start(i):SequenceCode.end(i)))];
         if i==1
-            SequenceCode.value = [SequenceCode.value, length(char(xmlData(SequenceCode.start(i):SequenceCode.end(i))))];
+            SequenceCode.textValue = [SequenceCode.textValue, length(char(xmlData(SequenceCode.start(i):SequenceCode.end(i))))];
         else
-            SequenceCode.value = [SequenceCode.value, SequenceCode.value(i-1)+length(char(xmlData(SequenceCode.start(i):SequenceCode.end(i))))];
+            SequenceCode.textValue = [SequenceCode.textValue, SequenceCode.textValue(i-1)+length(char(xmlData(SequenceCode.start(i):SequenceCode.end(i))))];
         end
     else
-        SequenceCode.text = [SequenceCode.text, char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2))];
+        SequenceCode.textChain = [SequenceCode.textChain, char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2))];
         if i==1
-            SequenceCode.value = [SequenceCode.value, length(char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2)))];
+            SequenceCode.textValue = [SequenceCode.textValue, length(char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2)))];
         else
-            SequenceCode.value = [SequenceCode.value, SequenceCode.value(i-1)+length(char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2)))];
+            SequenceCode.textValue = [SequenceCode.textValue, SequenceCode.textValue(i-1)+length(char(xmlData(SequenceCode.start(i):SequenceCode.start(i)+string-2)))];
         end
     end
 end
+SequenceCode.textValue = [1, SequenceCode.textValue];
+
+
 
 
 %% Setting the data channels taggs
