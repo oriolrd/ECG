@@ -1,0 +1,46 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import biosig
+
+### Prueba en Matlab-Biosig
+# Data load
+dataset = biosig.data("Data01.hl7")
+
+# Counting number of channels.
+## NOT useful at the moment
+channels = np.prod(dataset.shape)/len(dataset)
+
+# Taking the data for every channel
+dataset_ch1 = dataset[1:len(dataset),1]
+dataset_ch2 = dataset[1:len(dataset),2]
+dataset_ch3 = dataset[1:len(dataset),0]
+
+#dataRange = dataSource[180:240]
+
+fs = 250
+t = len(dataset)/fs # seconds
+
+fig = plt.figure()  # an empty figure with no axes
+plt.plot(dataset_ch1, t, label='Channel 1')
+plt.show()
+
+
+
+#fs = hd.SampleRate;  # fs = 250
+#N = length(ecg1);
+##t=(1:N)'/fs;
+#plot(t, -ecg1(:,1))  # Derivación 1 (ver hd.Label)
+#plot(t, -ecg1(:,3))  # Derivación 3, parece ser V1 (ver hd.Label)
+# Encontar los picos de la onda R con función findpeaks de matlab
+# Busacamos picos a partir del máximo del ECG /2
+#m=max(-ecg1(:,1))
+#[pic,pos] = findpeaks(-ecg1(:,1), 'MinPeakHeight',m/2);
+#plot(t, -ecg1(:,1),pos/fs,pic,'or')
+# Vamos remuestrear a 1000 samp/sec con splines
+#fs2 =1000;
+#t1000 = (1/fs2:1/fs2:t(end));
+#ecg1000 = spline(t',ecg1',t1000);
+#[pic2,pos2] = findpeaks(-ecg1000(1,:),'MINPEAKHEIGHT',m/2);
+#plot(t, -ecg1(:,1),t1000,-ecg1000(1,:),pos/fs,pic,'or',pos2/f2,pic2,'+g')
+# Observa un pico de R de un latido y verás la mejora al interpolar
+#####
