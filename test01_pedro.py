@@ -1,4 +1,6 @@
 import numpy as np
+# from scipy import signal #findpeaks not set up
+from detect_peaks import detect_peaks
 import matplotlib.pyplot as plt
 import biosig
 
@@ -11,19 +13,27 @@ dataset = biosig.data("Data01.hl7")
 channels = np.prod(dataset.shape)/len(dataset)
 
 # Taking the data for every channel
-dataset_ch1 = dataset[1:len(dataset),1]
-dataset_ch2 = dataset[1:len(dataset),2]
-dataset_ch3 = dataset[1:len(dataset),0]
+#dataset_ch1 = dataset[0:len(dataset),0]
+#dataset_ch2 = dataset[0:len(dataset),1]
+#dataset_ch3 = dataset[0:len(dataset),2]
+dataset_ch4 = dataset[10000:11000,0]
 
 #dataRange = dataSource[180:240]
 
 fs = 250
-t = len(dataset)/fs # seconds
+N = len(dataset_ch4)/fs # seconds
+t = np.linspace(0, N, len(dataset_ch4))
 
 fig = plt.figure()  # an empty figure with no axes
-plt.plot(dataset_ch1, t, label='Channel 1')
+plt.plot(t, dataset_ch4, label='Channel 1')
+plt.xlim((0,max(t)))
+plt.ylim((min(dataset_ch4), max(dataset_ch4)))
 plt.show()
 
+# Find R peaks
+m = max(dataset_ch4)
+#peakind = signal.find_peaks_cwt(dataset_ch1, m/2)
+indexes = detect_peaks(dataset_ch4, mph=m/2, mpd=fs/2)
 
 
 #fs = hd.SampleRate;  # fs = 250
